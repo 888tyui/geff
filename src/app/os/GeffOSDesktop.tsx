@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import WalletProvider from "./WalletProvider";
 import Taskbar from "./components/Taskbar";
 import DesktopIcons from "./components/DesktopIcons";
@@ -10,6 +11,17 @@ import type { AppWindow } from "./types";
 export default function GeffOSDesktop() {
   const [windows, setWindows] = useState<AppWindow[]>([]);
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const bgX = useTransform(mouseX, [0, 1], ["-1.5%", "1.5%"]);
+  const bgY = useTransform(mouseY, [0, 1], ["-1.5%", "1.5%"]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left) / rect.width);
+    mouseY.set((e.clientY - rect.top) / rect.height);
+  };
 
   const openWindow = useCallback(
     (appId: string, title: string) => {
@@ -24,14 +36,26 @@ export default function GeffOSDesktop() {
 
       const id = `${appId}-${Date.now()}`;
       const offset = (windows.length % 6) * 30;
+      const slotApps = ["savanna-spins", "crypto-rockets", "golden-geff"];
+      const isSlot = slotApps.includes(appId);
+      const isGallery = appId === "gallery" || appId === "meme-gallery";
+
+      let width = 480;
+      let height = 440;
+      if (isGallery) { width = 720; height = 520; }
+      else if (isSlot) { width = 780; height = 600; }
+      else if (appId === "terminal") { width = 600; height = 420; }
+      else if (appId === "token-stats") { width = 640; height = 480; }
+      else if (appId === "snake-game") { width = 480; height = 440; }
+
       const newWindow: AppWindow = {
         id,
         appId,
         title,
         x: 80 + offset,
         y: 40 + offset,
-        width: appId === "gallery" || appId === "meme-gallery" ? 720 : 480,
-        height: appId === "gallery" || appId === "meme-gallery" ? 520 : 440,
+        width,
+        height,
         minimized: false,
         maximized: false,
       };
@@ -87,14 +111,33 @@ export default function GeffOSDesktop() {
     <WalletProvider>
       <div
         className="relative w-screen h-screen overflow-hidden select-none"
-        style={{
-          backgroundImage: "url(/images/bg2.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        onMouseMove={handleMouseMove}
       >
+        {/* Parallax background */}
+        <motion.div
+          className="absolute -inset-4"
+          style={{ x: bgX, y: bgY }}
+        >
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: "url(/images/bg2.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        </motion.div>
+
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/30" />
+
+        {/* Vignette overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)",
+          }}
+        />
 
         {/* Desktop Icons */}
         <div className="relative z-10 h-[calc(100vh-52px)]">

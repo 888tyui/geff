@@ -1,6 +1,7 @@
 "use client";
 
-import { Wallet, Image as ImageIcon, Laugh, Dice6, Gamepad2, Info } from "lucide-react";
+import { motion } from "framer-motion";
+import { Wallet, Image as ImageIcon, Laugh, Dice6, Gamepad2, Info, Cherry, Rocket, Crown, Terminal, BarChart3, Bug } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const apps: { id: string; title: string; icon: LucideIcon }[] = [
@@ -10,6 +11,12 @@ const apps: { id: string; title: string; icon: LucideIcon }[] = [
   { id: "roulette", title: "Roulette", icon: Dice6 },
   { id: "random-game", title: "geff Run", icon: Gamepad2 },
   { id: "about", title: "About", icon: Info },
+  { id: "savanna-spins", title: "Savanna Spins", icon: Cherry },
+  { id: "crypto-rockets", title: "Crypto Rockets", icon: Rocket },
+  { id: "golden-geff", title: "Golden Geff", icon: Crown },
+  { id: "terminal", title: "Terminal", icon: Terminal },
+  { id: "token-stats", title: "Token Stats", icon: BarChart3 },
+  { id: "snake-game", title: "Snake", icon: Bug },
 ];
 
 export default function DesktopIcons({
@@ -19,9 +26,14 @@ export default function DesktopIcons({
 }) {
   return (
     <div className="p-4 md:p-6 flex flex-col flex-wrap gap-2 h-full content-start">
-      {apps.map((app) => (
-        <button
+      {apps.map((app, i) => (
+        <motion.button
           key={app.id}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: i * 0.08, type: "spring", stiffness: 300, damping: 20 }}
+          whileHover={{ y: -4 }}
+          whileTap={{ scale: 0.9 }}
           onDoubleClick={() => onOpenApp(app.id, app.title)}
           onClick={() => onOpenApp(app.id, app.title)}
           className="group flex flex-col items-center gap-1.5 w-20 py-2 rounded-lg hover:bg-white/10 transition-colors"
@@ -32,7 +44,7 @@ export default function DesktopIcons({
           <span className="text-[11px] text-white font-medium drop-shadow-md text-center leading-tight">
             {app.title}
           </span>
-        </button>
+        </motion.button>
       ))}
     </div>
   );

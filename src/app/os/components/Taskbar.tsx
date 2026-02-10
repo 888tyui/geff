@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Wallet, Image as ImageIcon, Laugh, Dice6, Gamepad2, Info, Home } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Wallet, Image as ImageIcon, Laugh, Dice6, Gamepad2, Info, Home, Cherry, Rocket, Crown, Terminal, BarChart3, Bug } from "lucide-react";
 import type { AppWindow } from "../types";
 import type { LucideIcon } from "lucide-react";
 
@@ -13,6 +14,12 @@ const startMenuApps: { id: string; title: string; icon: LucideIcon }[] = [
   { id: "roulette", title: "Roulette", icon: Dice6 },
   { id: "random-game", title: "geff Run", icon: Gamepad2 },
   { id: "about", title: "About geff", icon: Info },
+  { id: "savanna-spins", title: "Savanna Spins", icon: Cherry },
+  { id: "crypto-rockets", title: "Crypto Rockets", icon: Rocket },
+  { id: "golden-geff", title: "Golden Geff", icon: Crown },
+  { id: "terminal", title: "Terminal", icon: Terminal },
+  { id: "token-stats", title: "Token Stats", icon: BarChart3 },
+  { id: "snake-game", title: "Snake", icon: Bug },
 ];
 
 export default function Taskbar({
@@ -41,42 +48,51 @@ export default function Taskbar({
 
   return (
     <>
-      {startOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setStartOpen(false)}>
-          <div
-            className="absolute bottom-[52px] left-2 w-64 bg-[#1a1209]/95 backdrop-blur-xl border border-[#8B5E3C]/30 rounded-xl overflow-hidden shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 border-b border-[#8B5E3C]/20">
-              <p className="font-bold text-[#E88B3A] text-lg" style={{ fontFamily: "'Cimo Ones', cursive" }}>
-                geffOS
-              </p>
-              <p className="text-white/30 text-xs">v1.0.0</p>
-            </div>
-            <div className="p-2">
-              {startMenuApps.map((app) => (
-                <button
-                  key={app.id}
-                  onClick={() => { onOpenApp(app.id, app.title); setStartOpen(false); }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm text-left"
+      <AnimatePresence>
+        {startOpen && (
+          <div className="fixed inset-0 z-40" onClick={() => setStartOpen(false)}>
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="absolute bottom-[52px] left-2 w-64 bg-[#1a1209]/95 backdrop-blur-xl border border-[#8B5E3C]/30 rounded-xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-4 border-b border-[#8B5E3C]/20">
+                <p className="font-bold text-[#E88B3A] text-lg" style={{ fontFamily: "'Cimo Ones', cursive" }}>
+                  geffOS
+                </p>
+                <p className="text-white/30 text-xs">v1.0.0</p>
+              </div>
+              <div className="p-2">
+                {startMenuApps.map((app, i) => (
+                  <motion.button
+                    key={app.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    onClick={() => { onOpenApp(app.id, app.title); setStartOpen(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm text-left"
+                  >
+                    <app.icon size={16} className="text-[#E88B3A]/60" />
+                    {app.title}
+                  </motion.button>
+                ))}
+              </div>
+              <div className="p-2 border-t border-[#8B5E3C]/20">
+                <Link
+                  href="/"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all text-sm"
                 >
-                  <app.icon size={16} className="text-[#E88B3A]/60" />
-                  {app.title}
-                </button>
-              ))}
-            </div>
-            <div className="p-2 border-t border-[#8B5E3C]/20">
-              <Link
-                href="/"
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all text-sm"
-              >
-                <Home size={16} className="text-white/30" />
-                Back to Home
-              </Link>
-            </div>
+                  <Home size={16} className="text-white/30" />
+                  Back to Home
+                </Link>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       <div className="fixed bottom-0 left-0 right-0 h-[52px] bg-[#0D0906]/90 backdrop-blur-xl border-t border-[#8B5E3C]/20 z-50 flex items-center px-2 gap-1">
         <button
@@ -98,19 +114,25 @@ export default function Taskbar({
         <div className="w-px h-6 bg-white/10 mx-1" />
 
         <div className="flex-1 flex items-center gap-1 overflow-x-auto">
-          {windows.map((w) => (
-            <button
-              key={w.id}
-              onClick={() => onFocusWindow(w.id)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all max-w-[160px] truncate ${
-                activeWindowId === w.id && !w.minimized
-                  ? "bg-[#E88B3A]/15 text-white border-b-2 border-[#E88B3A]"
-                  : "text-white/40 hover:text-white hover:bg-white/8"
-              } ${w.minimized ? "opacity-40" : ""}`}
-            >
-              <span className="truncate">{w.title}</span>
-            </button>
-          ))}
+          <AnimatePresence>
+            {windows.map((w) => (
+              <motion.button
+                key={w.id}
+                initial={{ scale: 0.8, opacity: 0, width: 0 }}
+                animate={{ scale: 1, opacity: 1, width: "auto" }}
+                exit={{ scale: 0.8, opacity: 0, width: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                onClick={() => onFocusWindow(w.id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all max-w-[160px] truncate ${
+                  activeWindowId === w.id && !w.minimized
+                    ? "bg-[#E88B3A]/15 text-white border-b-2 border-[#E88B3A]"
+                    : "text-white/40 hover:text-white hover:bg-white/8"
+                } ${w.minimized ? "opacity-40" : ""}`}
+              >
+                <span className="truncate">{w.title}</span>
+              </motion.button>
+            ))}
+          </AnimatePresence>
         </div>
 
         <div className="flex items-center gap-3 px-3">

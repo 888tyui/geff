@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { AppWindow } from "../types";
 import WalletApp from "../apps/WalletApp";
 import GalleryApp from "../apps/GalleryApp";
@@ -8,6 +9,12 @@ import MemeGalleryApp from "../apps/MemeGalleryApp";
 import RouletteApp from "../apps/RouletteApp";
 import RandomGameApp from "../apps/RandomGameApp";
 import AboutApp from "../apps/AboutApp";
+import SavannaSpinsApp from "../apps/SavannaSpinsApp";
+import CryptoRocketsApp from "../apps/CryptoRocketsApp";
+import GoldenGeffApp from "../apps/GoldenGeffApp";
+import TerminalApp from "../apps/TerminalApp";
+import TokenStatsApp from "../apps/TokenStatsApp";
+import SnakeGameApp from "../apps/SnakeGameApp";
 
 function getAppContent(appId: string) {
   switch (appId) {
@@ -23,6 +30,18 @@ function getAppContent(appId: string) {
       return <RandomGameApp />;
     case "about":
       return <AboutApp />;
+    case "savanna-spins":
+      return <SavannaSpinsApp />;
+    case "crypto-rockets":
+      return <CryptoRocketsApp />;
+    case "golden-geff":
+      return <GoldenGeffApp />;
+    case "terminal":
+      return <TerminalApp />;
+    case "token-stats":
+      return <TokenStatsApp />;
+    case "snake-game":
+      return <SnakeGameApp />;
     default:
       return <div className="p-4 text-white/50">Unknown app</div>;
   }
@@ -48,11 +67,13 @@ function Window({
   onMove: (x: number, y: number) => void;
 }) {
   const dragRef = useRef<{ startX: number; startY: number; winX: number; winY: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (w.maximized) return;
       onFocus();
+      setIsDragging(true);
       dragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
@@ -69,6 +90,7 @@ function Window({
 
       const handleMouseUp = () => {
         dragRef.current = null;
+        setIsDragging(false);
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
@@ -79,18 +101,26 @@ function Window({
     [w.x, w.y, w.maximized, onFocus, onMove]
   );
 
-  if (w.minimized) return null;
-
   const style = w.maximized
     ? { top: 0, left: 0, width: "100%", height: "calc(100vh - 52px)", zIndex }
     : { top: w.y, left: w.x, width: w.width, height: w.height, zIndex };
 
   return (
-    <div
-      className={`absolute flex flex-col rounded-xl overflow-hidden shadow-2xl transition-shadow ${
-        isActive
-          ? "shadow-[#E88B3A]/15 ring-1 ring-[#E88B3A]/30"
-          : "shadow-black/40 ring-1 ring-white/5"
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0, filter: "blur(8px)" }}
+      animate={
+        w.minimized
+          ? { scale: 0.15, opacity: 0, y: "80vh", filter: "blur(4px)" }
+          : { scale: 1, opacity: 1, y: 0, filter: "blur(0px)" }
+      }
+      exit={{ scale: 0.75, opacity: 0, filter: "blur(8px)" }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      className={`absolute flex flex-col rounded-xl overflow-hidden transition-shadow duration-200 ${
+        isDragging
+          ? "shadow-[0_25px_60px_rgba(0,0,0,0.5)] scale-[1.01]"
+          : isActive
+          ? "shadow-[#E88B3A]/15 ring-1 ring-[#E88B3A]/30 shadow-2xl"
+          : "shadow-black/40 ring-1 ring-white/5 shadow-2xl"
       }`}
       style={style}
       onMouseDown={onFocus}
@@ -110,15 +140,15 @@ function Window({
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <button
             onClick={(e) => { e.stopPropagation(); onMinimize(); }}
-            className="w-3 h-3 rounded-full bg-[#F5C563] hover:bg-[#F5C563]/80 transition-colors"
+            className="w-3 h-3 rounded-full bg-[#F5C563] hover:bg-[#F5C563]/80 hover:shadow-[0_0_6px_rgba(245,197,99,0.4)] transition-all active:scale-75"
           />
           <button
             onClick={(e) => { e.stopPropagation(); onMaximize(); }}
-            className="w-3 h-3 rounded-full bg-[#4CAF50] hover:bg-[#4CAF50]/80 transition-colors"
+            className="w-3 h-3 rounded-full bg-[#4CAF50] hover:bg-[#4CAF50]/80 hover:shadow-[0_0_6px_rgba(76,175,80,0.4)] transition-all active:scale-75"
           />
           <button
             onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="w-3 h-3 rounded-full bg-[#E88B3A] hover:bg-[#ff6b6b] transition-colors"
+            className="w-3 h-3 rounded-full bg-[#E88B3A] hover:bg-[#ff6b6b] hover:shadow-[0_0_6px_rgba(232,139,58,0.4)] transition-all active:scale-75"
           />
         </div>
       </div>
@@ -127,7 +157,7 @@ function Window({
       <div className="flex-1 bg-[#0D0906]/95 backdrop-blur-sm overflow-auto">
         {getAppContent(w.appId)}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -149,7 +179,7 @@ export default function WindowManager({
   onMove: (id: string, x: number, y: number) => void;
 }) {
   return (
-    <>
+    <AnimatePresence>
       {windows.map((w, i) => (
         <Window
           key={w.id}
@@ -163,6 +193,6 @@ export default function WindowManager({
           onMove={(x, y) => onMove(w.id, x, y)}
         />
       ))}
-    </>
+    </AnimatePresence>
   );
 }

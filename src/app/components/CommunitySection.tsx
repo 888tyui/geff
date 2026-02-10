@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 const socials = [
   {
     name: "Twitter / X",
-    href: "#",
+    href: "https://x.com/Geffmeme",
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -63,27 +63,31 @@ export default function CommunitySection() {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="flex flex-col sm:flex-row flex-wrap justify-center gap-3"
-        >
-          {socials.map((social) => (
-            <a
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
+          {socials.map((social, i) => (
+            <motion.a
               key={social.name}
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-center gap-3 px-7 py-4 bg-geff-dark/50 backdrop-blur-lg border border-geff-brown/15 rounded-full text-geff-cream/60 hover:text-geff-cream transition-all duration-300 hover:scale-105 hover:border-geff-orange/30 hover:bg-geff-dark/70 active:scale-95"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+              whileHover={{ scale: 1.08, y: -3, boxShadow: "0 10px 30px rgba(232, 139, 58, 0.15)" }}
+              whileTap={{ scale: 0.95 }}
+              className="group flex items-center justify-center gap-3 px-7 py-4 bg-geff-dark/50 backdrop-blur-lg border border-geff-brown/15 rounded-full text-geff-cream/60 hover:text-geff-cream transition-all duration-300 hover:border-geff-orange/30 hover:bg-geff-dark/70"
             >
-              <span className="group-hover:text-geff-orange transition-colors duration-300">
+              <motion.span
+                className="group-hover:text-geff-orange transition-colors duration-300"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
                 {social.icon}
-              </span>
+              </motion.span>
               <span className="font-medium text-sm">{social.name}</span>
-            </a>
+            </motion.a>
           ))}
-        </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -91,13 +95,16 @@ export default function CommunitySection() {
           transition={{ delay: 0.7, duration: 0.6 }}
           className="mt-14 text-center"
         >
-          <a
+          <motion.a
             href="#how-to-buy"
-            className="group inline-flex items-center gap-3 px-10 py-5 bg-geff-orange text-geff-dark font-bold text-lg rounded-full transition-all duration-300 hover:bg-geff-gold hover:shadow-lg hover:shadow-geff-orange/25 hover:scale-105 active:scale-95"
+            whileHover={{ scale: 1.12, boxShadow: "0 0 40px rgba(232, 139, 58, 0.3)" }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="group inline-flex items-center gap-3 px-10 py-5 bg-geff-orange text-geff-dark font-bold text-lg rounded-full transition-all duration-300 hover:bg-geff-gold"
           >
             <span className="font-display">Buy $geff Now</span>
             <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
-          </a>
+          </motion.a>
         </motion.div>
       </div>
     </section>
