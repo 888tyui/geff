@@ -86,9 +86,9 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium tracking-[0.2em] text-geff-orange bg-geff-orange/10 border border-geff-orange/25 rounded-full mb-8 uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium tracking-[0.08em] text-geff-orange bg-geff-orange/10 border border-geff-orange/25 rounded-full mb-8">
               <Radio size={10} className="animate-pulse" />
-              Live on Solana
+              CA : 9nB7UbFPVh1dBXDhFxSRMLACGbASbdVsgB6TVSbtpump
             </span>
           </motion.div>
 
@@ -129,7 +129,7 @@ export default function HeroSection() {
             className="flex flex-wrap gap-4 justify-center lg:justify-start"
           >
             <motion.a
-              href="https://pump.fun/coin/9nB7UbFPVh1dBXDhFxSRMLACGbASbdVsgB6TVSbtpump"
+              href="https://x.com/Geffmeme"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(232, 139, 58, 0.4)" }}
@@ -138,7 +138,7 @@ export default function HeroSection() {
               className="group relative px-8 py-4 bg-geff-orange text-geff-dark font-bold text-lg rounded-full overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Buy $geff
+                Join Community
                 <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-geff-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
