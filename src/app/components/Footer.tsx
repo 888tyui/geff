@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -6,8 +7,9 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
-            <Link href="#home" className="font-display text-3xl text-geff-orange hover:text-geff-gold transition-colors">
-              geff
+            <Link href="#home" className="flex items-center gap-2 justify-center md:justify-start hover:opacity-80 transition-opacity">
+              <Image src="/images/1.jpg" alt="geff" width={32} height={32} className="rounded-full" />
+              <span className="font-display text-3xl text-geff-orange hover:text-geff-gold transition-colors">geff</span>
             </Link>
             <p className="text-geff-cream/25 text-sm mt-1">
               The Tallest Meme on Solana

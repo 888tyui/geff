@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
@@ -39,9 +40,18 @@ export default function Navbar() {
       >
         <Link
           href="#home"
-          className="font-display text-xl text-geff-orange px-4 py-1 tracking-wider hover:text-geff-gold transition-colors"
+          className="flex items-center gap-2 px-3 py-1 hover:opacity-80 transition-opacity"
         >
-          geff
+          <Image
+            src="/images/1.jpg"
+            alt="geff"
+            width={28}
+            height={28}
+            className="rounded-full"
+          />
+          <span className="font-display text-xl text-geff-orange tracking-wider">
+            geff
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-0.5">

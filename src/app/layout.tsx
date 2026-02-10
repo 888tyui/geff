@@ -12,7 +12,20 @@ export const metadata: Metadata = {
   title: "geff - The Tallest Meme on Solana",
   description:
     "No roadmap. No utility. Just a giraffe who has seen some things on the blockchain.",
-  icons: { icon: "/images/1.jpg" },
+  icons: { icon: "/images/1.jpg", apple: "/images/1.jpg" },
+  openGraph: {
+    title: "geff - The Tallest Meme on Solana",
+    description:
+      "No roadmap. No utility. Just a giraffe who has seen some things on the blockchain.",
+    images: [{ url: "/images/bg1.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "geff - The Tallest Meme on Solana",
+    description:
+      "No roadmap. No utility. Just a giraffe who has seen some things on the blockchain.",
+    images: ["/images/bg1.jpg"],
+  },
 };
 
 export default function RootLayout({
