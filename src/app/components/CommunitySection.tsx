@@ -87,7 +87,9 @@ export default function CommunitySection() {
           className="mt-14 text-center"
         >
           <motion.a
-            href="#how-to-buy"
+            href="https://pump.fun/coin/9nB7UbFPVh1dBXDhFxSRMLACGbASbdVsgB6TVSbtpump"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.12, boxShadow: "0 0 40px rgba(232, 139, 58, 0.3)" }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}

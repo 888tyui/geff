@@ -181,7 +181,7 @@ export default function TokenStatsApp() {
           <span className="text-lg">🦒</span>
           <div>
             <h2 className="text-sm font-bold text-[#E88B3A]">GEFF Token</h2>
-            <p className="text-[10px] text-white/30">Live Dashboard (simulated)</p>
+            <p className="text-[10px] text-white/30">Live Dashboard</p>
           </div>
         </div>
         <div className="flex items-center gap-1">

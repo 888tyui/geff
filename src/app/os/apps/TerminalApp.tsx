@@ -93,7 +93,6 @@ export default function TerminalApp() {
         case "balance":
           newLines.push(
             `${(Math.random() * 999999 + 1000).toFixed(2)} GEFF`,
-            "(not real, just vibes)",
             ""
           );
           break;
