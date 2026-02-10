@@ -1,14 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Radio } from "lucide-react";
+import { useRef } from "react";
 
 export default function HeroSection() {
+  const sectionRef = useRef(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const imgRotateX = useTransform(mouseY, [-300, 300], [5, -5]);
+  const imgRotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+  const parallaxX = useTransform(mouseX, [-500, 500], [15, -15]);
+  const parallaxY = useTransform(mouseY, [-500, 500], [15, -15]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0">
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <Image
           src="/images/bg1.jpg"
           alt="Savanna sunset"
@@ -19,10 +48,36 @@ export default function HeroSection() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-geff-dark/95 via-geff-dark/70 to-geff-dark/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-geff-dark via-transparent to-geff-dark/40" />
-      </div>
+      </motion.div>
 
-      <div className="absolute top-20 left-10 w-32 h-32 bg-geff-orange/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-40 right-20 w-48 h-48 bg-geff-gold/5 rounded-full blur-3xl" />
+      {/* Animated floating orbs */}
+      <motion.div
+        animate={{
+          x: [0, 30, -20, 0],
+          y: [0, -40, 20, 0],
+          scale: [1, 1.2, 0.9, 1],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 left-10 w-32 h-32 bg-geff-orange/8 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          x: [0, -25, 35, 0],
+          y: [0, 30, -35, 0],
+          scale: [1, 0.8, 1.3, 1],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-40 right-20 w-48 h-48 bg-geff-gold/8 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          x: [0, 40, -15, 0],
+          y: [0, -20, 45, 0],
+          scale: [1, 1.1, 0.85, 1],
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/2 right-1/3 w-40 h-40 bg-geff-brown/5 rounded-full blur-3xl"
+      />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
         <div className="flex-1 text-center lg:text-left">
@@ -33,7 +88,7 @@ export default function HeroSection() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium tracking-[0.2em] text-geff-orange bg-geff-orange/10 border border-geff-orange/25 rounded-full mb-8 uppercase">
               <Radio size={10} className="animate-pulse" />
-              Live on Solana
+              CA : TBA
             </span>
           </motion.div>
 
@@ -73,23 +128,34 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.55 }}
             className="flex flex-wrap gap-4 justify-center lg:justify-start"
           >
-            <a
-              href="#how-to-buy"
-              className="group relative px-8 py-4 bg-geff-orange text-geff-dark font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-geff-orange/25 hover:scale-105 active:scale-95"
+            <motion.a
+              href="https://x.com/Geffmeme"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(232, 139, 58, 0.4)" }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="group relative px-8 py-4 bg-geff-orange text-geff-dark font-bold text-lg rounded-full overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Buy $geff
+                Follow us
                 <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-geff-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </a>
-            <Link
-              href="/os"
-              className="group px-8 py-4 border-2 border-geff-cream/20 text-geff-cream font-bold text-lg rounded-full transition-all duration-300 hover:bg-geff-cream/5 hover:border-geff-orange/50 hover:scale-105 active:scale-95 flex items-center gap-2"
+            </motion.a>
+            <motion.div
+              whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(255, 248, 240, 0.1)" }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              Enter geffOS
-              <ArrowRight size={16} className="text-geff-orange group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+              <Link
+                href="/os"
+                className="group px-8 py-4 border-2 border-geff-cream/20 text-geff-cream font-bold text-lg rounded-full transition-all duration-300 hover:bg-geff-cream/5 hover:border-geff-orange/50 flex items-center gap-2"
+              >
+                Enter geffOS
+                <ArrowRight size={16} className="text-geff-orange group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -98,8 +164,20 @@ export default function HeroSection() {
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="flex-shrink-0 flex justify-center lg:justify-end"
+          style={{ x: parallaxX, y: parallaxY }}
         >
-          <div className="relative animate-float">
+          <motion.div
+            className="relative animate-float"
+            style={{ rotateX: imgRotateX, rotateY: imgRotateY, perspective: 800 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            {/* Pulsing glow behind image */}
+            <motion.div
+              animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.95, 1.05, 0.95] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -inset-8 bg-geff-orange/15 rounded-[3rem] blur-2xl"
+            />
             <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
               <Image
                 src="/images/1.jpg"
@@ -120,7 +198,7 @@ export default function HeroSection() {
             >
               $geff
             </motion.div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 
